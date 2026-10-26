@@ -1,0 +1,16 @@
+# macOS / Python
+.DS_Store
+__pycache__/
+*.pyc
+
+# Blender backups
+*.blend1
+*.blend2
+
+# Regenerable test & render output (re-run tools/selftest.py / tests/bench.py to recreate)
+tests/results/
+tests/selftest/
+tasks/reports/validation/_selftest/
+
+# Episode render frames (large)
+episodes/*/frames/

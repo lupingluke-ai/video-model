@@ -1,0 +1,26 @@
+{
+  "asset": "arm",
+  "blend": "assets/arm.blend",
+  "collection": "ARM",
+  "root": "ARM_Rig",
+  "objects": [
+    {"name": "ARM_Rig", "type": "ARMATURE"},
+    {"name": "ARM_Base", "type": "MESH"},
+    {"name": "ARM_Upper", "type": "MESH"},
+    {"name": "ARM_Fore", "type": "MESH"},
+    {"name": "ARM_Wrist", "type": "MESH"},
+    {"name": "ARM_Finger_L", "type": "MESH"},
+    {"name": "ARM_Finger_R", "type": "MESH"}
+  ],
+  "bones": {"ARM_Rig": ["base_yaw", "shoulder", "elbow", "wrist_pitch", "wrist_roll",
+                        "finger_L", "finger_R", "grip_socket", "ik_target", "ik_pole"]},
+  "custom_props": [
+    {"object": "ARM_Rig", "name": "grip", "min": 0.0, "max": 1.0},
+    {"object": "ARM_Rig", "name": "servo_jitter", "min": 0.0, "max": 1.0}
+  ],
+  "actions": ["ARM_home", "ARM_idle"],
+  "material_prefixes": ["MAT_", "ARM_"],
+  "max_triangles": 20000,
+  "bbox": {"min_size": [0.10, 0.10, 0.35], "max_size": [0.55, 0.55, 0.85]},
+  "origin_on_floor": true
+}

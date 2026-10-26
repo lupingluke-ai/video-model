@@ -1,0 +1,26 @@
+{
+  "asset": "gungun",
+  "blend": "assets/gungun.blend",
+  "collection": "GG",
+  "root": "GG_Rig",
+  "objects": [
+    {"name": "GG_Rig", "type": "ARMATURE"},
+    {"name": "GG_Shell", "type": "MESH"},
+    {"name": "GG_Screen", "type": "MESH"},
+    {"name": "GG_Antenna", "type": "MESH"}
+  ],
+  "bones": {"GG_Rig": ["root", "shell", "upright", "antenna_1", "antenna_2"]},
+  "custom_props": [
+    {"object": "GG_Rig", "name": "face_expr", "min": 0, "max": 3},
+    {"object": "GG_Rig", "name": "eye_open", "min": 0.0, "max": 1.0},
+    {"object": "GG_Rig", "name": "look_x", "min": -1.0, "max": 1.0},
+    {"object": "GG_Rig", "name": "look_y", "min": -1.0, "max": 1.0},
+    {"object": "GG_Rig", "name": "squash", "min": -1.0, "max": 1.0},
+    {"object": "GG_Rig", "name": "antenna_glow", "min": 0.0, "max": 1.0}
+  ],
+  "actions": ["GG_idle", "GG_bounce2", "GG_spin", "GG_sleep", "GG_curious", "GG_scared"],
+  "material_prefixes": ["MAT_", "GG_"],
+  "max_triangles": 20000,
+  "bbox": {"min_size": [0.26, 0.26, 0.36], "max_size": [0.36, 0.36, 0.55]},
+  "origin_on_floor": true
+}

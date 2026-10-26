@@ -1,0 +1,39 @@
+{
+  "asset": "xiaobo",
+  "blend": "assets/xiaobo.blend",
+  "collection": "XB",
+  "root": "XB_Rig",
+  "objects": [
+    {"name": "XB_Rig", "type": "ARMATURE"},
+    {"name": "XB_Head", "type": "MESH"},
+    {"name": "XB_FaceScreen", "type": "MESH"},
+    {"name": "XB_Body", "type": "MESH"},
+    {"name": "XB_Base", "type": "MESH"},
+    {"name": "XB_Antenna", "type": "MESH"},
+    {"name": "XB_Hand_L", "type": "MESH"},
+    {"name": "XB_Hand_R", "type": "MESH"},
+    {"name": "XB_FaceLight", "type": "LIGHT"}
+  ],
+  "bones": {"XB_Rig": ["root", "body", "head", "antenna_base", "antenna_tip",
+                       "arm_upper.L", "arm_lower.L", "hand.L", "arm_upper.R", "arm_lower.R", "hand.R",
+                       "ik_hand.L", "ik_hand.R"]},
+  "custom_props": [
+    {"object": "XB_Rig", "name": "face_expr", "min": 0, "max": 7},
+    {"object": "XB_Rig", "name": "icon_id", "min": 0, "max": 5},
+    {"object": "XB_Rig", "name": "eye_open", "min": 0.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "mouth_open", "min": 0.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "look_x", "min": -1.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "look_y", "min": -1.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "screen_on", "min": 0.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "scanline", "min": 0.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "antenna_ext", "min": 0.0, "max": 1.0},
+    {"object": "XB_Rig", "name": "face_color"}
+  ],
+  "actions": ["XB_idle", "XB_talk_A", "XB_talk_B", "XB_point_flipchart", "XB_point_tv", "XB_point_bench",
+              "XB_wave", "XB_nod", "XB_shake", "XB_look_pet", "XB_flip_page"],
+  "drivers_required": [{"object": "XB_FaceLight", "min": 1}],
+  "material_prefixes": ["MAT_", "XB_"],
+  "max_triangles": 60000,
+  "bbox": {"min_size": [0.45, 0.22, 0.80], "max_size": [0.80, 0.45, 1.20]},
+  "origin_on_floor": true
+}

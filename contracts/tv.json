@@ -1,0 +1,22 @@
+{
+  "asset": "tv",
+  "blend": "assets/tv.blend",
+  "collection": "TV",
+  "root": "TV_Root",
+  "objects": [
+    {"name": "TV_Root", "type": "EMPTY"},
+    {"name": "TV_Body", "type": "MESH"},
+    {"name": "TV_Screen", "type": "MESH"},
+    {"name": "TV_PushTarget", "type": "EMPTY"}
+  ],
+  "custom_props": [
+    {"object": "TV_Root", "name": "screen_on", "min": 0.0, "max": 1.0},
+    {"object": "TV_Root", "name": "scanline", "min": 0.0, "max": 1.0},
+    {"object": "TV_Root", "name": "glow", "min": 0.0, "max": 2.0}
+  ],
+  "material_nodes": [{"material": "TV_ScreenMat", "node": "TV_Media", "type": "TEX_IMAGE"}],
+  "material_prefixes": ["MAT_", "TV_"],
+  "max_triangles": 15000,
+  "bbox": {"min_size": [0.45, 0.35, 0.38], "max_size": [0.70, 0.55, 0.85]},
+  "origin_on_floor": true
+}

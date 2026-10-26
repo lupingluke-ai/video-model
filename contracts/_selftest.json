@@ -1,0 +1,67 @@
+{
+  "asset": "_selftest",
+  "blend": "tests/selftest/selftest.blend",
+  "collection": "ST",
+  "root": "ST_Root",
+  "objects": [
+    {
+      "name": "ST_Root",
+      "type": "EMPTY"
+    },
+    {
+      "name": "ST_Box",
+      "type": "MESH"
+    },
+    {
+      "name": "ST_Screen",
+      "type": "MESH"
+    },
+    {
+      "name": "ST_Light",
+      "type": "LIGHT"
+    }
+  ],
+  "custom_props": [
+    {
+      "object": "ST_Screen",
+      "name": "mouth_open",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "object": "ST_Screen",
+      "name": "face_color"
+    }
+  ],
+  "material_prefixes": [
+    "MAT_",
+    "ST_"
+  ],
+  "max_triangles": 20000,
+  "bbox": {
+    "min_size": [
+      0.2,
+      0.2,
+      0.2
+    ],
+    "max_size": [
+      0.6,
+      0.6,
+      0.6
+    ]
+  },
+  "origin_on_floor": true,
+  "material_nodes": [
+    {
+      "material": "ST_Face",
+      "node": "ST_Img",
+      "type": "TEX_IMAGE"
+    }
+  ],
+  "drivers_required": [
+    {
+      "object": "ST_Light",
+      "min": 4
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "asset": "flipchart",
+  "blend": "assets/flipchart.blend",
+  "collection": "FC",
+  "root": "FC_Root",
+  "objects": [
+    {
+      "name": "FC_Root",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Easel",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Board",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_MarkerCup",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_00",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_01",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_02",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_03",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_04",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_05",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_06",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_07",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_08",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_09",
+      "type": "MESH"
+    },
+    {
+      "name": "FC_Page_00_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_01_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_02_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_03_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_04_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_05_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_06_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_07_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_08_Content",
+      "type": "EMPTY"
+    },
+    {
+      "name": "FC_Page_09_Content",
+      "type": "EMPTY"
+    }
+  ],
+  "custom_props": [
+    {
+      "object": "FC_Page_00",
+      "name": "flip",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "object": "FC_Page_09",
+      "name": "flip",
+      "min": 0.0,
+      "max": 1.0
+    }
+  ],
+  "material_prefixes": [
+    "MAT_",
+    "FC_"
+  ],
+  "max_triangles": 15000,
+  "bbox": {
+    "min_size": [
+      0.6,
+      0.35,
+      1.6
+    ],
+    "max_size": [
+      1.0,
+      0.9,
+      1.9
+    ]
+  },
+  "origin_on_floor": true
+}

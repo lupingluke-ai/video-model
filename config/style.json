@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "project": "xiaobo-late-night-radio",
+  "units": "meters",
+  "axis": "Z up, -Y is the default front (characters face -Y)",
+  "fps": 30,
+  "palette": {
+    "walnut": "#4A2F1D",
+    "olive": "#3F4A3A",
+    "orange": "#C8612B",
+    "mustard": "#D4A62A",
+    "cream": "#EDE0C4",
+    "teal": "#4FE3C1",
+    "brass": "#B08D57",
+    "ink": "#2B1E16",
+    "screen_off": "#0B0F0E",
+    "amber": "#FFB347",
+    "ice_blue": "#7FD4FF",
+    "lavender": "#B9A3FF",
+    "red_orange": "#FF5A36",
+    "moonlight": "#9DB8FF",
+    "tungsten": "#FFB36B"
+  },
+  "materials": {
+    "MAT_Walnut": {
+      "color": "walnut",
+      "roughness": 0.55,
+      "metallic": 0.0,
+      "note": "optional wave-texture grain, keep subtle"
+    },
+    "MAT_OliveWall": {
+      "color": "olive",
+      "roughness": 0.85,
+      "metallic": 0.0
+    },
+    "MAT_OrangePaint": {
+      "color": "orange",
+      "roughness": 0.42,
+      "metallic": 0.0
+    },
+    "MAT_Mustard": {
+      "color": "mustard",
+      "roughness": 0.45,
+      "metallic": 0.0
+    },
+    "MAT_Cream": {
+      "color": "cream",
+      "roughness": 0.5,
+      "metallic": 0.0
+    },
+    "MAT_Brass": {
+      "color": "brass",
+      "roughness": 0.32,
+      "metallic": 1.0
+    },
+    "MAT_Rubber": {
+      "color": "ink",
+      "roughness": 0.9,
+      "metallic": 0.0
+    },
+    "MAT_ScreenOff": {
+      "color": "screen_off",
+      "roughness": 0.25,
+      "metallic": 0.0
+    },
+    "MAT_Paper": {
+      "color": "cream",
+      "roughness": 0.9,
+      "metallic": 0.0
+    }
+  },
+  "face": {
+    "emission_strength": 6.0,
+    "expressions": [
+      {
+        "id": 0,
+        "name": "default",
+        "color": "teal",
+        "eyes": "rounded rectangles, occasional blink"
+      },
+      {
+        "id": 1,
+        "name": "happy",
+        "color": "amber",
+        "eyes": "upward arcs (smiling eyes)"
+      },
+      {
+        "id": 2,
+        "name": "thinking",
+        "color": "ice_blue",
+        "eyes": "eyes look up-left, small"
+      },
+      {
+        "id": 3,
+        "name": "confused",
+        "color": "lavender",
+        "eyes": "one eye larger than the other"
+      },
+      {
+        "id": 4,
+        "name": "alert",
+        "color": "red_orange",
+        "eyes": "wide open, tall"
+      },
+      {
+        "id": 5,
+        "name": "idea",
+        "color": "amber",
+        "eyes": "replaced by icon_id 3 (bulb) when icon set"
+      },
+      {
+        "id": 6,
+        "name": "love",
+        "color": "amber",
+        "eyes": "replaced by icon_id 4 (heart) when icon set"
+      },
+      {
+        "id": 7,
+        "name": "meh",
+        "color": "teal",
+        "eyes": "half-closed flat lines"
+      }
+    ],
+    "icons": [
+      {
+        "id": 0,
+        "name": "none"
+      },
+      {
+        "id": 1,
+        "name": "question"
+      },
+      {
+        "id": 2,
+        "name": "exclamation"
+      },
+      {
+        "id": 3,
+        "name": "bulb"
+      },
+      {
+        "id": 4,
+        "name": "heart"
+      },
+      {
+        "id": 5,
+        "name": "loading"
+      }
+    ]
+  },
+  "lighting_initial": {
+    "note": "Starting values for T01. T01 tunes them and records the final values in tasks/reports/T01.md. Energies in watts.",
+    "LGT_Key": {
+      "type": "AREA",
+      "location": [
+        1.6,
+        -2.6,
+        2.3
+      ],
+      "aim_at": [
+        0.0,
+        0.3,
+        1.0
+      ],
+      "energy": 250,
+      "size": 1.5,
+      "color": "tungsten"
+    },
+    "LGT_Fill": {
+      "type": "AREA",
+      "location": [
+        -2.0,
+        -2.2,
+        1.8
+      ],
+      "aim_at": [
+        0.0,
+        0.3,
+        1.0
+      ],
+      "energy": 60,
+      "size": 1.5,
+      "color": "cream"
+    },
+    "LGT_Moon": {
+      "type": "AREA",
+      "location": [
+        2.4,
+        0.9,
+        1.6
+      ],
+      "aim_at": [
+        0.0,
+        0.6,
+        1.0
+      ],
+      "energy": 150,
+      "size": 1.2,
+      "color": "moonlight"
+    },
+    "LGT_FloorGlobe": {
+      "type": "POINT",
+      "location": [
+        -0.85,
+        1.25,
+        1.45
+      ],
+      "energy": 40,
+      "radius": 0.15,
+      "color": "tungsten"
+    },
+    "LGT_BenchLamp": {
+      "type": "SPOT",
+      "location": [
+        2.3,
+        -0.95,
+        1.65
+      ],
+      "aim_at": [
+        2.0,
+        -0.95,
+        0.9
+      ],
+      "energy": 60,
+      "spot_deg": 55,
+      "color": "tungsten"
+    },
+    "LGT_ShelfStrip": {
+      "type": "AREA",
+      "location": [
+        -1.6,
+        1.8,
+        1.6
+      ],
+      "aim_at": [
+        -1.6,
+        1.9,
+        1.0
+      ],
+      "energy": 30,
+      "size": 0.9,
+      "color": "tungsten"
+    },
+    "LGT_LavaGlow": {
+      "type": "POINT",
+      "location": [
+        0.38,
+        -0.2,
+        0.62
+      ],
+      "energy": 5,
+      "radius": 0.05,
+      "color": "orange"
+    }
+  },
+  "render": {
+    "engine": "BLENDER_EEVEE",
+    "engine_note": "Blender 5.x identifier. In 4.2-4.4 it was BLENDER_EEVEE_NEXT; _common.eevee_id() handles both.",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "preview_resolution": [
+      960,
+      540
+    ],
+    "fps": 30,
+    "samples_final": 64,
+    "samples_preview": 16,
+    "view_transform": "AgX",
+    "file_format": "PNG"
+  },
+  "budgets_triangles": {
+    "note": "Counted on the evaluated mesh at RENDER subdivision levels.",
+    "xiaobo": 60000,
+    "gungun": 20000,
+    "arm": 20000,
+    "flipchart": 15000,
+    "tv": 15000,
+    "prop_each": 5000,
+    "room_total_without_characters": 600000
+  }
+}

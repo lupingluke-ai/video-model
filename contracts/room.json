@@ -1,0 +1,66 @@
+{
+  "asset": "room",
+  "blend": "assets/room.blend",
+  "collection": "ROOM_SET",
+  "sub_collections": [
+    "ROOM_ARCH",
+    "ROOM_FURNITURE",
+    "ROOM_DRESSING",
+    "LIGHTS",
+    "CAMS",
+    "MARKS",
+    "PROXIES"
+  ],
+  "cameras": [
+    "CAM_Wide",
+    "CAM_Host",
+    "CAM_HostClose",
+    "CAM_TV",
+    "CAM_Flipchart",
+    "CAM_Bench",
+    "CAM_Pet"
+  ],
+  "lights": [
+    "LGT_Key",
+    "LGT_Fill",
+    "LGT_Moon",
+    "LGT_FloorGlobe",
+    "LGT_BenchLamp",
+    "LGT_ShelfStrip",
+    "LGT_LavaGlow"
+  ],
+  "marks": [
+    "MARK_Host",
+    "MARK_HostTable",
+    "MARK_Flipchart",
+    "MARK_Flipchart_Stand",
+    "MARK_TV",
+    "MARK_Bench_Props",
+    "MARK_Slot_A",
+    "MARK_Slot_B",
+    "MARK_Slot_C",
+    "MARK_Prop_Source",
+    "MARK_Arm_Base",
+    "MARK_Pet_Bed",
+    "MARK_Window"
+  ],
+  "material_prefixes": [
+    "MAT_",
+    "ROOM_"
+  ],
+  "max_triangles": 600000,
+  "bbox": {
+    "min_size": [
+      4.9,
+      3.9,
+      2.6
+    ],
+    "max_size": [
+      10.0,
+      12.0,
+      5.0
+    ]
+  },
+  "origin_on_floor": false,
+  "render_cameras": true
+}

@@ -1,0 +1,35 @@
+{
+  "asset": "stage",
+  "blend": "assets/stage.blend",
+  "collection": "STAGE",
+  "sub_collections": [
+    "ROOM_SET",
+    "XB",
+    "GG",
+    "ARM",
+    "FC",
+    "TV",
+    "STAGE_PROPS"
+  ],
+  "cameras": [
+    "CAM_Wide",
+    "CAM_Host",
+    "CAM_HostClose",
+    "CAM_TV",
+    "CAM_Flipchart",
+    "CAM_Bench",
+    "CAM_Pet"
+  ],
+  "material_prefixes": [
+    "MAT_",
+    "ROOM_",
+    "XB_",
+    "GG_",
+    "ARM_",
+    "FC_",
+    "TV_",
+    "PROP_"
+  ],
+  "max_triangles": 900000,
+  "render_cameras": true
+}

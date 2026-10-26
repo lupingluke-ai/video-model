@@ -1,0 +1,136 @@
+{
+  "asset": "props",
+  "blend": "assets/props.blend",
+  "collection": "PROPS",
+  "sub_collections": [
+    "PROP_chip",
+    "PROP_server",
+    "PROP_stopwatch",
+    "PROP_block",
+    "PROP_question",
+    "PROP_trophy",
+    "PROP_pricetag",
+    "PROP_logo_tile",
+    "PROP_coin",
+    "PROP_bulb",
+    "PROP_docs"
+  ],
+  "objects": [
+    {
+      "name": "PROP_chip",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_chip_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_server",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_server_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_stopwatch",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_stopwatch_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_block",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_block_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_question",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_question_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_trophy",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_trophy_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_pricetag",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_pricetag_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_logo_tile",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_logo_tile_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_coin",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_coin_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_bulb",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_bulb_grab",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_docs",
+      "type": "EMPTY"
+    },
+    {
+      "name": "PROP_docs_grab",
+      "type": "EMPTY"
+    }
+  ],
+  "custom_props": [
+    {
+      "object": "PROP_chip",
+      "name": "grip_width",
+      "min": 0.005,
+      "max": 0.1
+    },
+    {
+      "object": "PROP_logo_tile",
+      "name": "grip_width",
+      "min": 0.005,
+      "max": 0.1
+    }
+  ],
+  "material_nodes": [
+    {
+      "material": "PROP_LogoMat",
+      "node": "PROP_Logo_Image",
+      "type": "TEX_IMAGE"
+    }
+  ],
+  "material_prefixes": [
+    "MAT_",
+    "PROP_"
+  ],
+  "max_triangles": 55000,
+  "origin_on_floor": true,
+  "per_subcollection_root": true
+}
