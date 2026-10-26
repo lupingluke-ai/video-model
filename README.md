@@ -2,6 +2,7 @@
 
 这个文件夹是《小波深夜电台》的全部 3D 资产和生成脚本。资产由 Agent 按任务卡用脚本生成。
 
+- 节目设定与技术方案（完整版）：`docs/00_节目设定.md`、`docs/00_技术方案.md`
 - 给 Agent 看的总入口：`AGENTS.md`
 - 派发任务的提示词：`tasks/PROMPTS.md`
 - 进度：`tasks/STATUS.md`
@@ -23,7 +24,7 @@ bash tools/blender.sh tools/selftest.py --tag manual   # 环境自测，结果�
 ```
 AGENTS.md            Agent 总说明（规则、环境、任务图、完成标准）
 config/style.json    色板、材质、灯光初始值、渲染设置、面数预算（唯一的颜色来源）
-docs/                设定、约定、房间布局、接口、渲染实测
+docs/                节目设定与技术方案（00_*）、设定、约定、房间布局、接口、渲染实测
 contracts/           每个资产的接口契约（验收脚本按它检查）
 tasks/               任务卡 T00–T08、状态表、提示词、报告
 assets/build/        生成脚本；_common.py 是公共库
