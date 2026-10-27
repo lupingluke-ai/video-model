@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>FORM / 01 — Film export</title>
+<style>html,body{margin:0;width:1920px;height:1080px;background:#f5f5f7;overflow:hidden}iframe{display:block;border:0;width:1920px;height:1080px}#frame-status{position:absolute;left:-10000px}</style>
+<iframe id="film" src="./?record=1" title="Film frame"></iframe><output id="frame-status">Loading</output>
+<script type="module">
+const film=document.getElementById('film'),status=document.getElementById('frame-status');
+const frames=900,duration=15;
+let current=0,ready=false;
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+for(let i=0;!film.contentWindow.__formReady;i++){if(i>240)throw Error('Scene timed out');await wait(250)}
+const w=film.contentWindow,a=w.__rebuild,d=w.document;
+await d.fonts.ready;
+a.score.pause();a.renderer.setAnimationLoop(null);
+a.renderer.setPixelRatio(1.5);a.renderer.setSize(1920,1080);
+const style=d.createElement('style');style.textContent='*,*::before,*::after{transition:none!important;animation:none!important;caret-color:transparent!important}#loader{display:none!important}*:focus{outline:none!important}';d.head.append(style);
+async function render(index){
+ ready=false;current=Math.max(0,Math.min(frames-1,index));
+ status.textContent='Rendering';
+ const t=current/(frames-1)*duration;
+ a.score.seek(t);a.story.update(0);a.story.pose.flush();
+ const drift=Math.min(1,current/33)*0.004,target=a.story.controls.target;
+ const offset=a.camera.position.clone().sub(target).applyAxisAngle(a.camera.position.clone().set(0,1,0),drift);
+ a.camera.position.copy(target).add(offset);a.camera.lookAt(target);
+ a.renderer.render(a.scene,a.camera);
+ const play=d.querySelector('#score-play');play.dataset.playing=String(current<frames-1);
+ play.setAttribute('aria-label',current<frames-1?'Pause master score':'Play master score');
+ d.querySelector('#score-more').open=false;
+ await new Promise(r=>w.requestAnimationFrame(()=>w.requestAnimationFrame(r)));
+ status.textContent=String(current);document.body.dataset.frame=String(current);ready=true;
+}
+window.addEventListener('keydown',e=>{if(!ready)return;if(e.key==='ArrowRight'){e.preventDefault();render(current+1)}if(e.key==='Home'){e.preventDefault();render(0)}const shots={'b':251,'r':252,'1':0,'2':33,'3':114,'4':174,'5':210,'6':375,'7':450,'8':620,'9':760,'End':899};if(e.key in shots){e.preventDefault();render(shots[e.key])}});
+await render(0);
+</script></html>

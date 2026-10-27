@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FORM / 01 — Dexterous Robotic Arm</title>
+<meta name="description" content="FORM / 01. A seven-axis robotic arm with a twenty-DOF dexterous hand, rendered live beneath a frost-clear shell.">
+<meta name="theme-color" content="#f5f5f7">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="%23e6ebf1" stroke="%231d1d1f" stroke-opacity=".3" stroke-width="1.5"/></svg>'>
+<style>
+  :root{
+    --bg:#f5f5f7; --ink:#1d1d1f; --ink-2:#6e6e73; --ink-3:#86868b;
+    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.05);
+    --card:rgba(255,255,255,.72); --card-solid:#fbfbfd;
+    --accent:#0071e3; --accent-ink:#fff;
+    --radius:20px;
+    --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.06);
+    --shadow-lg:0 12px 44px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06);
+    --dock-clear:122px;
+    --ease-snap:cubic-bezier(.32,.72,.28,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:var(--font); background:var(--bg); color:var(--ink);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow:hidden; overscroll-behavior:none;
+  }
+  #stage{position:fixed;inset:0;z-index:20;touch-action:none}
+  #stage canvas{display:block}
+  button{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+  /* ---------- top bar ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:30;
+    display:flex;align-items:center;gap:14px;
+    padding:14px 26px;pointer-events:none;
+  }
+  header .brand{
+    font-size:15px;font-weight:600;letter-spacing:.12em;pointer-events:auto;
+    display:flex;align-items:baseline;gap:9px;white-space:nowrap;user-select:none;
+  }
+  header .brand small{font-weight:500;color:var(--ink-3);letter-spacing:.09em;font-size:10.5px}
+  header nav{
+    pointer-events:auto;display:flex;gap:2px;margin-left:10px;
+    background:var(--card);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+    border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--shadow-sm);
+  }
+  header nav button{
+    border:0;background:transparent;font-size:12.5px;font-weight:500;color:var(--ink-2);
+    padding:7px 14px;border-radius:999px;cursor:pointer;transition:background .18s ease,color .18s ease;
+    min-height:30px;
+  }
+  header nav button:hover{color:var(--ink)}
+  header nav button.on{background:var(--ink);color:#fff}
+  header .spacer{flex:1}
+  .icon-btn{
+    pointer-events:auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);
+    background:var(--card);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+    display:grid;place-items:center;cursor:pointer;color:var(--ink-2);
+    transition:color .18s ease,transform .18s ease,box-shadow .18s ease;box-shadow:var(--shadow-sm);
+  }
+  .icon-btn:hover{color:var(--ink);transform:translateY(-1px)}
+  .icon-btn:active{transform:none}
+  .icon-btn svg{width:16px;height:16px}
+  .icon-btn[aria-expanded="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .btn{
+    font-size:14px;font-weight:500;border-radius:999px;padding:11px 24px;cursor:pointer;
+    border:1px solid transparent;transition:background .18s ease,transform .18s ease;
+    text-decoration:none;display:inline-block;min-height:44px;line-height:22px;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink)}
+  .btn.primary:hover{background:#0077ed}
+  .btn.ghost{background:transparent;color:var(--accent)}
+  .btn.ghost:hover{background:rgba(0,113,227,.09)}
+  .btn[disabled]{opacity:.5;pointer-events:none}
+
+  /* ---------- dock ---------- */
+  #dock{
+    position:fixed;z-index:25;left:0;right:0;margin:0 auto;width:fit-content;
+    bottom:max(16px,env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    max-width:100vw;
+  }
+  .dock-desktop{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .dock-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;padding:0 12px}
+  .caps{
+    display:flex;gap:2px;background:var(--card);
+    backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+    border:1px solid var(--line);border-radius:999px;padding:3px;box-shadow:var(--shadow-sm);
+  }
+  .caps button{
+    border:0;background:transparent;font-size:12.5px;font-weight:500;color:var(--ink-2);
+    padding:8px 15px;border-radius:999px;cursor:pointer;white-space:nowrap;
+    transition:background .16s ease,color .16s ease;display:inline-flex;align-items:center;gap:7px;
+    min-height:32px;
+  }
+  .caps button:hover{color:var(--ink)}
+  .caps button.on{background:var(--ink);color:#fff}
+  .caps button .swatch{
+    width:13px;height:13px;border-radius:50%;flex:none;
+    border:1px solid rgba(0,0,0,.14);box-shadow:inset 0 1px 2px rgba(255,255,255,.5);
+  }
+  .caps button.on .swatch{border-color:rgba(255,255,255,.4)}
+  #transport,.transport{
+    display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);
+    backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+    border-radius:999px;padding:4px 12px 4px 5px;box-shadow:var(--shadow-sm);
+  }
+  .play{
+    width:32px;height:32px;display:grid;place-items:center;flex:none;
+    background:var(--ink);color:#fff;border:0;border-radius:50%;cursor:pointer;
+    transition:transform .16s ease,background .16s ease;
+  }
+  .play:hover{transform:scale(1.06)}
+  .play:active{transform:scale(.96)}
+  .play svg{width:12px;height:12px}
+  .tlabel{font-size:11px;color:var(--ink-3);min-width:36px;text-align:center;font-variant-numeric:tabular-nums}
+  input[type=range].timeline{
+    -webkit-appearance:none;appearance:none;width:168px;height:22px;background:transparent;outline:none;cursor:pointer;
+  }
+  input[type=range].timeline::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:rgba(0,0,0,.16)}
+  input[type=range].timeline::-webkit-slider-thumb{
+    -webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--ink);
+    margin-top:-5px;cursor:pointer;border:0;
+  }
+  input[type=range].timeline::-moz-range-track{height:3px;border-radius:2px;background:rgba(0,0,0,.16)}
+  input[type=range].timeline::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--ink);border:0;cursor:pointer}
+
+  /* ---------- mobile dock ---------- */
+  .dock-mobile{display:none;width:calc(100vw - 20px);max-width:420px;position:relative}
+  .mbar{
+    display:flex;gap:4px;align-items:center;width:100%;
+    background:var(--card);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);
+    border:1px solid var(--line);border-radius:24px;padding:5px;box-shadow:var(--shadow-lg);
+  }
+  .mbar .play{width:46px;height:46px}
+  .mbar .play svg{width:14px;height:14px}
+  .mbar .mpop{
+    flex:1;border:0;background:transparent;border-radius:18px;cursor:pointer;
+    font-size:12.5px;font-weight:500;color:var(--ink-2);min-height:46px;
+    display:flex;align-items:center;justify-content:center;gap:5px;
+    transition:background .16s ease,color .16s ease;
+  }
+  .mbar .mpop svg{width:10px;height:10px;opacity:.55;transition:transform .2s ease}
+  .mbar .mpop:hover{color:var(--ink)}
+  .mbar .mpop[aria-expanded="true"]{background:rgba(0,0,0,.07);color:var(--ink)}
+  .mbar .mpop[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .popover{
+    position:absolute;left:0;right:0;bottom:calc(100% + 10px);
+    background:var(--card);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-lg);
+    padding:12px;display:flex;flex-direction:column;gap:10px;
+  }
+  .popover[hidden]{display:none}
+  .popover .ptitle{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:2px 4px 0}
+  .popover .caps{
+    background:transparent;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+    border-radius:0;padding:0;flex-wrap:wrap;gap:6px;
+  }
+  .popover .caps button{
+    border:1px solid var(--line);background:rgba(255,255,255,.65);
+    min-height:44px;padding:10px 16px;font-size:13px;
+  }
+  .popover .caps button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .popover .transport{width:100%;border-radius:16px;padding:6px 14px 6px 7px}
+  .popover .transport .play{width:38px;height:38px}
+  .popover input[type=range].timeline{flex:1;width:auto}
+
+  /* ---------- engineering drawer ---------- */
+  #scrim{
+    position:fixed;inset:0;z-index:27;background:rgba(0,0,0,.16);
+    opacity:0;pointer-events:none;transition:opacity .3s ease;display:none;
+  }
+  #scrim.show{opacity:1;pointer-events:auto}
+  #drawer{
+    position:fixed;z-index:35;top:0;right:0;bottom:0;width:364px;max-width:94vw;
+    background:rgba(250,250,252,.88);backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border-left:1px solid var(--line);box-shadow:-18px 0 50px rgba(0,0,0,.09);
+    transform:translateX(103%);transition:transform .36s var(--ease-snap),visibility 0s linear .36s;
+    display:flex;flex-direction:column;visibility:hidden;
+  }
+  #drawer.open{transform:translateX(0);visibility:visible;transition:transform .36s var(--ease-snap),visibility 0s}
+  #drawer .grabber{display:none;width:38px;height:4.5px;border-radius:3px;background:rgba(0,0,0,.16);margin:9px auto 2px;flex:none}
+  #drawer .dhead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px;flex:none}
+  #drawer .dhead h2{font-size:17px;font-weight:600;letter-spacing:-.01em}
+  #drawer .dbody{overflow-y:auto;padding:2px 20px 34px;flex:1;-webkit-overflow-scrolling:touch}
+  .sect{border-top:1px solid var(--line);padding:15px 0 17px}
+  .sect:first-child{border-top:0}
+  .sect h3{
+    font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink-3);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  }
+  .sect h3 .hint{font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--ink-3)}
+  .jrow{display:grid;grid-template-columns:104px 1fr 50px;gap:10px;align-items:center;margin:9px 0}
+  .jrow label{
+    font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .jrow output{font-size:11.5px;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range].slider{
+    -webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;outline:none;cursor:pointer;
+  }
+  input[type=range].slider::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:rgba(0,0,0,.16)}
+  input[type=range].slider::-webkit-slider-thumb{
+    -webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;
+    border:1px solid rgba(0,0,0,.14);box-shadow:0 1px 4px rgba(0,0,0,.2);margin-top:-6px;cursor:pointer;
+  }
+  input[type=range].slider::-moz-range-track{height:3px;border-radius:2px;background:rgba(0,0,0,.16)}
+  input[type=range].slider::-moz-range-thumb{
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:1px solid rgba(0,0,0,.14);box-shadow:0 1px 4px rgba(0,0,0,.2);cursor:pointer;
+  }
+  .chiprow{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{
+    border:1px solid var(--line);background:rgba(255,255,255,.65);border-radius:999px;
+    padding:8px 15px;font-size:12.5px;font-weight:500;color:var(--ink-2);cursor:pointer;
+    transition:all .16s ease;min-height:34px;
+  }
+  .chip:hover{color:var(--ink)}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .kv{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--ink-2);padding:4px 0}
+  .kv b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
+  .export-row{display:flex;gap:10px}
+  .export-row .btn{flex:1;text-align:center;padding:10px 12px}
+  .btn.secondary{background:rgba(255,255,255,.7);border-color:var(--line);color:var(--ink)}
+  .btn.secondary:hover{background:#fff}
+  .export-status{font-size:11.5px;color:var(--ink-3);margin-top:9px;min-height:15px;line-height:1.4}
+  .export-status.err{color:#b3261e}
+
+  /* ---------- part card ---------- */
+  #partcard{
+    position:fixed;z-index:26;left:22px;bottom:var(--dock-clear);width:292px;max-width:calc(100vw - 44px);
+    background:var(--card);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-lg);
+    padding:17px 18px 15px;transform:translateY(12px);opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .25s ease,transform .25s ease,visibility 0s linear .25s;
+  }
+  #partcard.show{transform:none;opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s ease,transform .25s ease,visibility 0s}
+  #partcard h4{font-size:15px;font-weight:600;margin-bottom:3px;letter-spacing:-.01em;padding-right:24px}
+  #partcard .role{font-size:10.5px;color:var(--accent);font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-bottom:9px}
+  #partcard p{font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+  #partcard .meta{margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  #partcard .meta .kv{font-size:12px;padding:2.5px 0}
+  #partcard .close{
+    position:absolute;top:9px;right:9px;width:30px;height:30px;border:0;border-radius:50%;
+    background:transparent;font-size:17px;line-height:1;color:var(--ink-3);cursor:pointer;
+    display:grid;place-items:center;transition:background .15s ease,color .15s ease;
+  }
+  #partcard .close:hover{background:rgba(0,0,0,.06);color:var(--ink)}
+
+  /* ---------- toast ---------- */
+  #toast{
+    position:fixed;z-index:40;left:50%;bottom:var(--dock-clear);transform:translate(-50%,10px);
+    background:rgba(29,29,31,.94);color:#fff;font-size:12.5px;font-weight:500;
+    padding:10px 20px;border-radius:999px;box-shadow:var(--shadow-lg);
+    opacity:0;pointer-events:none;transition:opacity .28s ease,transform .28s ease;
+    white-space:nowrap;max-width:min(92vw,560px);text-overflow:ellipsis;overflow:hidden;
+  }
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+  #toast.err{background:rgba(179,38,30,.95)}
+
+  /* ---------- loading ---------- */
+  #loader{
+    position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:20px;transition:opacity .55s ease,visibility 0s linear .55s;
+  }
+  #loader.done{opacity:0;pointer-events:none;visibility:hidden}
+  #loader .mark{font-size:15px;font-weight:600;letter-spacing:.16em}
+  #loader .mark small{display:block;text-align:center;font-size:10px;font-weight:500;letter-spacing:.24em;color:var(--ink-3);margin-top:6px}
+  #loader .bar{width:180px;height:2px;background:rgba(0,0,0,.1);border-radius:2px;overflow:hidden}
+  #loader .bar i{display:block;height:100%;width:0%;background:var(--ink);transition:width .25s ease}
+  #loader .step{font-size:11.5px;color:var(--ink-3);letter-spacing:.04em;min-height:14px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:900px){
+    header nav{display:none}
+  }
+  @media (max-width:760px){
+    :root{--dock-clear:84px}
+    header{padding:11px 14px;gap:9px}
+    header .brand{font-size:14px}
+    header .brand small{display:none}
+    .dock-desktop{display:none}
+    .dock-mobile{display:block}
+    #partcard{left:14px;right:14px;width:auto;bottom:calc(var(--dock-clear) + 8px)}
+    #scrim{display:block}
+    #drawer{
+      top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;max-height:min(78vh,620px);
+      border-left:0;border-top:1px solid var(--line);border-radius:24px 24px 0 0;
+      box-shadow:0 -16px 50px rgba(0,0,0,.14);
+      transform:translateY(104%);
+    }
+    #drawer.open{transform:translateY(0)}
+    #drawer .grabber{display:block}
+    #drawer .dhead{padding-top:6px}
+    .jrow{grid-template-columns:96px 1fr 48px}
+  }
+  @media (pointer:coarse){
+    header nav button{min-height:44px;padding:10px 16px}
+    .icon-btn{width:44px;height:44px}
+    .icon-btn svg{width:18px;height:18px}
+    .caps button{min-height:44px;padding:10px 17px}
+    .play{width:44px;height:44px}
+    .play svg{width:14px;height:14px}
+    .chip{min-height:44px;padding:10px 17px}
+    input[type=range].slider{height:34px}
+    input[type=range].slider::-webkit-slider-thumb{width:21px;height:21px;margin-top:-9px}
+    input[type=range].slider::-moz-range-thumb{width:20px;height:20px}
+    input[type=range].timeline{height:34px}
+    #partcard .close{width:38px;height:38px}
+    .jrow{margin:11px 0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{transition-duration:.01ms!important;animation:none!important}
+  }
+
+  /* ---------- guided tour ---------- */
+  body.story{overflow:auto}
+  body.story #stage{touch-action:pan-y}
+  #story-space{position:relative;width:1px;pointer-events:none;visibility:hidden}
+  #chapters{
+    position:fixed;z-index:26;left:20px;top:50%;transform:translateY(-50%);
+    display:flex;flex-direction:column;gap:2px;max-height:70vh;overflow-y:auto;scrollbar-width:none;
+  }
+  #chapters button{
+    display:flex;align-items:center;gap:9px;border:0;background:transparent;
+    padding:7px 8px 7px 4px;border-radius:999px;cursor:pointer;color:var(--ink-3);
+    font-size:12px;font-weight:500;transition:color .18s ease;text-align:left;min-height:32px;
+  }
+  #chapters button .dot{width:7px;height:7px;border-radius:50%;background:rgba(0,0,0,.2);transition:all .18s ease;flex:none;margin:0 4px}
+  #chapters button:hover{color:var(--ink)}
+  #chapters button.on{color:var(--ink)}
+  #chapters button.on .dot{background:var(--ink);transform:scale(1.3)}
+  #chapters .clabel{
+    white-space:nowrap;background:var(--card);border:1px solid var(--line);padding:5px 11px;border-radius:999px;
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:var(--shadow-sm);
+    opacity:0;transform:translateX(-4px);transition:opacity .18s ease,transform .18s ease;pointer-events:none;
+  }
+  #chapters:hover .clabel,#chapters button.on .clabel,#chapters button:focus-visible .clabel{opacity:1;transform:none}
+  #tourCtl{position:fixed;z-index:26;left:20px;bottom:22px;display:flex;flex-direction:column;gap:8px}
+  #tourCtl button{
+    border:1px solid var(--line);background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    box-shadow:var(--shadow-sm);border-radius:999px;padding:9px 16px;font-size:12.5px;font-weight:500;color:var(--ink-2);
+    cursor:pointer;transition:all .18s ease;text-align:left;min-height:36px;
+  }
+  #tourCtl button:hover{color:var(--ink);transform:translateY(-1px)}
+  #tourCtl button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  @media (max-width:760px){
+    #chapters{
+      left:0;right:0;top:auto;bottom:70px;transform:none;flex-direction:row;justify-content:flex-start;
+      overflow-x:auto;overflow-y:hidden;padding:4px 10px;max-height:none;
+    }
+    #chapters button{padding:8px 10px}
+    #chapters .clabel{opacity:1;transform:none;padding:4px 9px}
+    #tourCtl{left:auto;right:12px;bottom:126px;flex-direction:row}
+    #tourCtl button{padding:9px 14px;min-height:44px}
+  }
+</style>
+</head>
+<body>
+<div id="stage" role="application" aria-label="Interactive 3D view of the FORM / 01 robotic arm"></div>
+
+<header>
+  <div class="brand">FORM&nbsp;/&nbsp;01<small>DEXTEROUS&nbsp;ARM</small></div>
+  <nav id="modeNav" aria-label="Display mode"></nav>
+  <div class="spacer"></div>
+  <button class="icon-btn" id="btnPng" title="Save current view as PNG" aria-label="Save current view as PNG">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.4"/></svg>
+  </button>
+  <button class="icon-btn" id="btnDrawer" title="Engineering controls" aria-label="Open engineering controls" aria-expanded="false" aria-controls="drawer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h8M16 7h4M4 12h2M10 12h10M4 17h11M19 17h1"/><circle cx="14" cy="7" r="2.1"/><circle cx="8" cy="12" r="2.1"/><circle cx="17" cy="17" r="2.1"/></svg>
+  </button>
+</header>
+
+<nav id="chapters" aria-label="Guided tour chapters"></nav>
+<div id="tourCtl">
+  <button type="button" id="btnFreeExplore" aria-pressed="false">Free explore</button>
+  <button type="button" id="btnOrbit">Orbit 360°</button>
+</div>
+
+<div id="dock">
+  <div class="dock-desktop">
+    <div class="dock-row">
+      <div class="caps" id="gestureCaps" role="group" aria-label="Hand gesture"></div>
+      <div class="transport" role="group" aria-label="Motion control">
+        <button class="play" id="btnPlay" type="button" aria-pressed="true" aria-label="Pause motion"></button>
+        <input type="range" class="timeline" id="timeline" min="0" max="8" step="0.01" value="0" aria-label="Gesture timeline">
+        <span class="tlabel" id="tlabel">0.0s</span>
+      </div>
+    </div>
+    <div class="dock-row">
+      <div class="caps" id="skinCaps" role="group" aria-label="Shell finish"></div>
+      <div class="caps" id="viewCaps" role="group" aria-label="Camera view"></div>
+    </div>
+  </div>
+  <div class="dock-mobile">
+    <div class="popover" id="popGesture" role="group" aria-label="Hand gesture and motion" hidden>
+      <span class="ptitle">Gesture</span>
+      <div class="caps" id="gestureCapsM"></div>
+      <span class="ptitle">Motion</span>
+      <div class="transport">
+        <button class="play" id="btnPlayM" type="button" aria-pressed="true" aria-label="Pause motion"></button>
+        <input type="range" class="timeline" id="timelineM" min="0" max="8" step="0.01" value="0" aria-label="Gesture timeline">
+        <span class="tlabel" id="tlabelM">0.0s</span>
+      </div>
+    </div>
+    <div class="popover" id="popDisplay" role="group" aria-label="Display mode" hidden>
+      <span class="ptitle">Display mode</span>
+      <div class="caps" id="modeCapsM"></div>
+    </div>
+    <div class="popover" id="popFinish" role="group" aria-label="Shell finish" hidden>
+      <span class="ptitle">Shell finish</span>
+      <div class="caps" id="skinCapsM"></div>
+    </div>
+    <div class="popover" id="popView" role="group" aria-label="Camera view" hidden>
+      <span class="ptitle">Camera view</span>
+      <div class="caps" id="viewCapsM"></div>
+    </div>
+    <div class="mbar">
+      <button class="play" id="btnMPlay" type="button" aria-pressed="true" aria-label="Pause motion"></button>
+      <button class="mpop" type="button" data-pop="popGesture" aria-expanded="false" aria-controls="popGesture">Gesture<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></button>
+      <button class="mpop" type="button" data-pop="popDisplay" aria-expanded="false" aria-controls="popDisplay">Display<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></button>
+      <button class="mpop" type="button" data-pop="popFinish" aria-expanded="false" aria-controls="popFinish">Finish<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></button>
+      <button class="mpop" type="button" data-pop="popView" aria-expanded="false" aria-controls="popView">View<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M1 1l4 4 4-4"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div id="scrim"></div>
+<aside id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" inert>
+  <div class="grabber" aria-hidden="true"></div>
+  <div class="dhead">
+    <h2 id="drawerTitle">Engineering</h2>
+    <button class="icon-btn" id="btnCloseDrawer" type="button" aria-label="Close engineering controls">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="dbody" id="drawerBody"></div>
+</aside>
+
+<div id="partcard" role="region" aria-label="Selected part">
+  <button class="close" id="partClose" type="button" aria-label="Dismiss part details">×</button>
+  <div class="role" id="partRole"></div>
+  <h4 id="partName"></h4>
+  <p id="partDesc"></p>
+  <div class="meta" id="partMeta"></div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div id="loader">
+  <div class="mark">FORM&nbsp;/&nbsp;01<small>DEXTEROUS&nbsp;ARM</small></div>
+  <div class="bar"><i id="loadBar"></i></div>
+  <div class="step" id="loadStep">Preparing</div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/controls/OrbitControls.js": "./vendor/OrbitControls.js",
+    "three/addons/exporters/GLTFExporter.js": "./vendor/GLTFExporter.js",
+    "three/addons/loaders/GLTFLoader.js": "./vendor/GLTFLoader.js",
+    "three/addons/utils/BufferGeometryUtils.js": "./vendor/BufferGeometryUtils.js"
+  }
+}
+</script>
+<script type="module" src="./src/main.js?v=hand-opening-20261013"></script>
+</body>
+</html>

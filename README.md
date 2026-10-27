@@ -32,4 +32,5 @@ assets/              生成出来的 .blend
 tools/               blender.sh（运行脚本）、validate.sh（验收）、selftest.py
 tests/               基准测试与自测
 library/             动作、表情、音效、字体等外部资源及授权记录
+references/          参考素材（K3.1 机械臂网页项目，只作参考）
 ```
